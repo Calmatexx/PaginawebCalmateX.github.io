@@ -1,0 +1,605 @@
+/* Intentar cargar la fuente localmente primero */
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('assets/fonts/PressStart2P-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Fallback si la fuente local no carga, intenta Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #222;
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: manipulation;
+}
+
+#main-game-wrapper {
+    position: relative;
+    width: 960px;
+    height: 720px;
+    border: 2px solid #555;
+    background-color: #333;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.game-screen {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.game-screen.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#start-screen h1, #level-select-screen h1 {
+    font-size: 3.5em;
+    margin-bottom: 40px;
+    color: #ff00ff;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+#start-screen button, #level-select-screen button, #settings-modal-content button {
+    margin: 15px 0;
+    padding: 18px 40px;
+    font-size: 1.6em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    font-family: 'Press Start 2P', cursive;
+}
+
+#start-screen button:hover, #level-select-screen button:hover, #settings-modal-content button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+#start-screen button:active, #level-select-screen button:active, #settings-modal-content button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+#controls-button-main-menu {
+    background-color: #6c757d;
+}
+
+#controls-button-main-menu:hover {
+    background-color: #5a6268;
+}
+
+#music-prompt, #video-error-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 20;
+    display: none;
+    animation: fadeIn 0.5s forwards;
+    pointer-events: none;
+}
+
+#start-game-overlay-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8em;
+    padding: 20px 40px;
+    background-color: #4CAF50;
+    color: white;
+    border: 4px solid #388E3C;
+    border-radius: 15px;
+    cursor: pointer;
+    z-index: 25;
+    display: none;
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transition: background-color 0.3s, border-color 0.3s, transform 0.1s ease-out;
+}
+
+#start-game-overlay-button:active {
+    transform: translate(-50%, -50%) translateY(3px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+#start-game-overlay-button:hover {
+    background-color: #5cb85c;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#game-play-area {
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    position: relative;
+}
+
+.game-video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+#gameBackgroundVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+#gameBackgroundImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+#score {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 1.8em;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+#music-time {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8em;
+    font-weight: bold;
+    z-index: 10;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+#music-name {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2em;
+    z-index: 10;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+#current-date-time {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2em;
+    color: #00bcd4;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    z-index: 10;
+}
+
+#target-arrows {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    z-index: 5;
+}
+
+.arrow-target {
+    width: 70px;
+    height: 70px;
+    background-color: #555;
+    border: 4px solid #777;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.5em;
+    font-weight: bold;
+    color: #eee;
+    transition: transform 0.1s ease, border-color 0.1s ease, background-color 0.1s ease, box-shadow 0.1s ease;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+.arrow-target.pressed {
+    transform: translateY(5px) scale(0.95);
+    background-color: #00bcd4;
+    border-color: #008c9e;
+    box-shadow: 0 5px 20px rgba(0, 188, 212, 0.7);
+}
+
+.arrow-target.pressed.up { background-color: #00bcd4; }
+.arrow-target.pressed.down { background-color: #ff5722; }
+.arrow-target.pressed.left { background-color: #4caf50; }
+.arrow-target.pressed.right { background-color: #ffeb3b; }
+
+.arrow-target.up::before { content: '↑'; }
+.arrow-target.down::before { content: '↓'; }
+.arrow-target.left::before { content: '←'; }
+.arrow-target.right::before { content: '→'; }
+
+.falling-arrow {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-color: #00bcd4;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.5em;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 200, 220, 0.7);
+    opacity: 0.9;
+}
+
+.falling-arrow.long {
+    height: 200px;
+    background: linear-gradient(to bottom, #00bcd4 50%, rgba(0, 188, 212, 0.5));
+    align-items: flex-start;
+    padding-top: 10px;
+}
+
+.falling-arrow.long::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-color: rgba(0, 188, 212, 0.7);
+    border-radius: 0 0 10px 10px;
+}
+
+.falling-arrow.up { background-color: #00bcd4; }
+.falling-arrow.down { background-color: #ff5722; }
+.falling-arrow.left { background-color: #4caf50; }
+.falling-arrow.right { background-color: #ffeb3b; }
+
+.falling-arrow.long.up { background: linear-gradient(to bottom, #00bcd4 50%, rgba(0, 188, 212, 0.5)); }
+.falling-arrow.long.down { background: linear-gradient(to bottom, #ff5722 50%, rgba(255, 87, 34, 0.5)); }
+.falling-arrow.long.left { background: linear-gradient(to bottom, #4caf50 50%, rgba(76, 175, 80, 0.5)); }
+.falling-arrow.long.right { background: linear-gradient(to bottom, #ffeb3b 50%, rgba(255, 235, 59, 0.5)); }
+
+.falling-arrow.hit {
+    opacity: 0;
+    transform: scale(1.2);
+    transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+}
+
+.falling-arrow.hold {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+#feedback-message {
+    position: absolute;
+    top: 250px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    text-shadow: 4px 4px 8px rgba(0,0,0,0.9);
+    animation: fadeOutUp 1s forwards;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#feedback-message.perfect { color: lime; }
+#feedback-message.good { color: lightblue; }
+#feedback-message.bad { color: red; }
+#feedback-message.perfect-hold { color: gold; }
+#feedback-message.good-hold { color: cyan; }
+
+@keyframes fadeOutUp {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-50px); }
+}
+
+#settings-button-game, #pause-button {
+    position: absolute;
+    top: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid #555;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 30;
+    font-size: 2em;
+    color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+#settings-button-game {
+    right: 20px;
+}
+
+#pause-button {
+    left: 20px;
+}
+
+#settings-button-game:hover, #pause-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+#settings-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    display: none;
+}
+
+#settings-modal-content {
+    background-color: #333;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    max-width: 90%;
+    width: 500px;
+    color: white;
+    text-align: center;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#settings-modal-content h2 {
+    margin-top: 0;
+    color: #00bcd4;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+#close-settings-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+#close-settings-btn:hover {
+    color: red;
+}
+
+.setting-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #444;
+    border-radius: 8px;
+    border: 1px solid #555;
+}
+
+.setting-section h3 {
+    margin-top: 0;
+    color: #ffeb3b;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+.mode-selector, .music-selector, .background-selector {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.mode-selector button, .music-selector button, .background-selector button {
+    background-color: #555;
+    color: white;
+    border: 2px solid #777;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9em;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.mode-selector button.active, .music-selector button.active, .background-selector button.active {
+    background-color: #00bcd4;
+    border-color: #008c9e;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.mode-selector button:hover:not(.active), .music-selector button:hover:not(.active), .background-selector button:hover:not(.active) {
+    background-color: #666;
+}
+
+#key-mapping-table, #gamepad-mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+#key-mapping-table th, #key-mapping-table td,
+#gamepad-mapping-table th, #gamepad-mapping-table td {
+    border: 1px solid #555;
+    padding: 10px;
+    text-align: left;
+}
+
+#key-mapping-table th, #gamepad-mapping-table th {
+    background-color: #2a2a2a;
+    color: #ffeb3b;
+}
+
+#key-mapping-table td, #gamepad-mapping-table td {
+    background-color: #4a4a4a;
+}
+
+#key-mapping-table input[type="text"],
+#gamepad-mapping-table input[type="text"] {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #777;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    text-align: center;
+    cursor: pointer;
+}
+
+p.connection-status-msg {
+    font-size: 0.8em;
+    color: #ccc;
+    margin-top: 10px;
+}
+
+p.connection-status-msg.error { color: red; }
+p.connection-status-msg.connected { color: lime; }
+
+#key-mapping-section:not(.active) { display: none; }
+#gamepad-mapping-section:not(.active) { display: none; }
+
+/* Media queries para responsividad */
+@media (max-width: 960px) {
+    #main-game-wrapper {
+        width: 100%;
+        height: 100vh;
+        max-height: 720px;
+        box-sizing: border-box;
+    }
+
+    #start-screen h1, #level-select-screen h1 {
+        font-size: 2.5em;
+    }
+
+    #start-screen button, #level-select-screen button, #settings-modal-content button {
+        font-size: 1.2em;
+        padding: 12px 30px;
+    }
+
+    .arrow-target, .falling-arrow {
+        width: 50px;
+        height: 50px;
+        font-size: 2.5em;
+    }
+
+    .falling-arrow.long {
+        height: 150px;
+    }
+
+    #score, #music-time, #music-name, #current-date-time {
+        font-size: 1.2em;
+    }
+
+    #feedback-message {
+        font-size: 2em;
+    }
+
+    #settings-button-game, #pause-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 600px) {
+    #start-screen h1, #level-select-screen h1 {
+        font-size: 2em;
+    }
+
+    #start-screen button, #level-select-screen button, #settings-modal-content button {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+
+    .arrow-target, .falling-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 2em;
+    }
+
+    .falling-arrow.long {
+        height: 120px;
+    }
+
+    #settings-modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    #settings-button-game, #pause-button {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2em;
+    }
+
+    #current-date-time {
+        font-size: 0.8em;
+    }
+}

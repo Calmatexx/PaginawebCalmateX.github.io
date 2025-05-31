@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>FNF Simplificado Avanzado</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-game-wrapper">
+        <div id="start-screen" class="game-screen active">
+            <h1>FNF Simplificado</h1>
+            <button id="start-button-main-menu">Iniciar Juego</button>
+            <button id="controls-button-main-menu">Configurar Controles</button>
+        </div>
+
+        <div id="level-select-screen" class="game-screen">
+            <h1>Selecciona un Nivel</h1>
+            <p id="selected-music-display">Música: Lamine Yamal</p>
+            <button id="level-easy-button">Fácil</button>
+            <button id="level-medium-button">Medio</button>
+            <button id="level-hard-button">Difícil</button>
+            <button id="back-to-menu-button">Volver</button>
+        </div>
+
+        <div id="game-screen" class="game-screen">
+            <div id="game-play-area">
+                <div class="game-video-background">
+                    <video id="gameBackgroundVideo" loop muted playsinline preload="auto"></video>
+                    <img id="gameBackgroundImage" src="fondo_fnf.jpg" alt="Fondo del juego" style="display: none;">
+                </div>
+                <div id="score">Puntuación: 0</div>
+                <div id="music-time">0:00 / 0:00</div>
+                <div id="music-name">Lamine Yamal</div>
+                <div id="current-date-time"></div>
+                <div id="target-arrows">
+                    <div class="arrow-target left" data-key="ArrowLeft" data-touch-id="0"></div>
+                    <div class="arrow-target down" data-key="ArrowDown" data-touch-id="1"></div>
+                    <div class="arrow-target up" data-key="ArrowUp" data-touch-id="2"></div>
+                    <div class="arrow-target right" data-key="ArrowRight" data-touch-id="3"></div>
+                </div>
+                <div id="feedback-message"></div>
+                <button id="settings-button-game">⚙</button>
+                <button id="pause-button">⏸</button>
+            </div>
+            <button id="start-game-overlay-button">TOCA PARA INICIAR</button>
+            <div id="music-prompt"></div>
+            <div id="video-error-prompt"></div>
+        </div>
+    </div>
+
+    <div id="settings-modal-overlay">
+        <div id="settings-modal-content">
+            <button id="close-settings-btn">✖</button>
+            <h2>Configuración del Juego</h2>
+            <div class="setting-section">
+                <h3>Selección de Música</h3>
+                <div class="music-selector">
+                    <button id="music-lamine-btn" data-music="lamine_yamal">Lamine Yamal</button>
+                    <button id="music-feelgood-btn" data-music="feel_good">Feel Good</button>
+                    <button id="music-jungle-btn" data-music="jungle">Welcome To The Jungle</button>
+                </div>
+            </div>
+            <div class="setting-section">
+                <h3>Modo de Control</h3>
+                <div class="mode-selector">
+                    <button id="mode-android-btn" data-mode="android">Android (Táctil)</button>
+                    <button id="mode-pc-btn" data-mode="pc">PC (Teclado)</button>
+                    <button id="mode-gamepad-btn" data-mode="gamepad">Mando (Gamepad)</button>
+                </div>
+            </div>
+            <div class="setting-section">
+                <h3>Tipo de Fondo</h3>
+                <div class="background-selector">
+                    <button id="bg-image-btn" data-bg-type="image">Imagen</button>
+                    <button id="bg-video-btn" data-bg-type="video">Video</button>
+                </div>
+            </div>
+            <div class="setting-section">
+                <h3>Selección de Video de Fondo (si el tipo es Video)</h3>
+                <div class="background-selector">
+                    <button id="bg-video-feelgood-btn" data-video="feel_good">Feel Good</button>
+                    <button id="bg-video-jungle-btn" data-video="jungle">Welcome To The Jungle</button>
+                </div>
+            </div>
+            <div id="key-mapping-section" class="setting-section">
+                <h3>Mapeo de Teclas (Modo PC)</h3>
+                <p>Haz clic en el campo y presiona la tecla deseada.</p>
+                <p id="no-keyboard-message" class="connection-status-msg error" style="display:none;">No se detecta un teclado físico. Intenta presionar una tecla.</p>
+                <table id="key-mapping-table">
+                    <thead>
+                        <tr>
+                            <th>Acción</th>
+                            <th>Tecla Mapeada</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="gamepad-mapping-section" class="setting-section">
+                <h3>Mapeo de Botones (Modo Mando)</h3>
+                <p>Presiona el botón del mando en el campo deseado.</p>
+                <p id="no-gamepad-message" class="connection-status-msg error" style="display:none;">No se detecta ningún mando. Conecta uno.</p>
+                <p id="gamepad-connected-name" class="connection-status-msg connected" style="display:none;"></p>
+                <table id="gamepad-mapping-table">
+                    <thead>
+                        <tr>
+                            <th>Acción</th>
+                            <th>Botón Mapeado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <button id="back-to-menu-from-settings">Volver al Menú Principal</button>
+        </div>
+    </div>
+
+    <audio id="backgroundMusic" preload="auto"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
