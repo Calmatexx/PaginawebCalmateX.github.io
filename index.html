@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Calmatex: Tu portal para videos musicales, juegos de FNF y configuraciones optimizadas para Free Fire." />
+  <title>CALMATEX</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #e0e0e0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fondo de partículas */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: transparent;
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(10px);
+      width: 250px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 2px 0 10px rgba(0, 255, 255, 0.2);
+      position: fixed;
+      height: 100%;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    nav.hidden {
+      transform: translateX(-100%);
+    }
+
+    nav a {
+      color: #00f0ff;
+      text-decoration: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    nav a:hover::before,
+    nav a.active::before {
+      left: 100%;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: rgba(0, 255, 255, 0.2);
+      color: #ffffff;
+      transform: translateX(5px);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: #00f0ff;
+      border: none;
+      color: #1a1a2e;
+      font-size: 24px;
+      padding: 10px;
+      cursor: pointer;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1100;
+      border-radius: 5px;
+    }
+
+    main {
+      flex-grow: 1;
+      margin-left: 250px;
+      padding: 40px;
+      background: rgba(22, 33, 62, 0.7);
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      min-height: 100vh;
+      transition: margin-left 0.3s ease;
+    }
+
+    main.full-width {
+      margin-left: 0;
+    }
+
+    h1, h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: #00f0ff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #b0b0b0;
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .video-container:hover {
+      transform: scale(1.02);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .juego-container {
+      height: calc(100vh - 150px);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .juego-container:hover {
+      transform: scale(1.02);
+    }
+
+    .juego-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .card {
+      background: rgba(26, 26, 46, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    button.back-btn {
+      background: linear-gradient(45deg, #00f0ff, #9b59b6);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    button.back-btn:hover {
+      background: linear-gradient(45deg, #9b59b6, #00f0ff);
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+    }
+
+    @media (max-width: 900px) {
+      nav {
+        transform: translateX(-100%);
+      }
+
+      nav.active {
+        transform: translateX(0);
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      main {
+        margin-left: 0;
+      }
+
+      main.full-width {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .juego-container {
+        height: calc(100vh - 200px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="particles" role="presentation" aria-hidden="true"></div>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-controls="nav-menu" aria-expanded="false">☰</button>
+  <div class="container">
+    <nav id="nav-menu">
+      <a href="#" class="nav-link active" data-section="inicio">Inicio</a>
+      <a href="#" class="nav-link" data-section="videos">Videos de YouTube</a>
+      <a href="#" class="nav-link" data-section="juegos">Juego de FNF</a>
+      <a href="#" class="nav-link" data-section="sensibilidad">Sensibilidad de Free Fire</a>
+    </nav>
+
+    <main>
+      <section id="inicio" class="content-section active">
+        <div class="card">
+          <h1>Calmatex</h1>
+          <p>Bienvenido a <strong>Calmatex</strong>, tu portal definitivo para disfrutar de videos musicales, juegos emocionantes y configuraciones optimizadas para Free Fire.</p>
+          <p>Explora nuestro contenido curado y sumérgete en una experiencia futurista diseñada para gamers y entusiastas de la música.</p>
+        </div>
+      </section>
+
+      <section id="videos" class="content-section">
+        <button class="back-btn" data-target-section="inicio">Volver al Menú</button>
+        <div class="card">
+          <h2>Videos</h2>
+          <p>Disfruta de nuestra selección de videos de YouTube, desde música hasta gameplays épicos.</p>
+        </div>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/pmanD_s7G3U" title="Video de Free Fire" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/hgZGPfxOM_I" title="Video de música" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/WRrZr6k7ZSU" title="Video de gameplay" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/OWBCIRhly4U" title="Video tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <section id="juegos" class="content-section">
+        <button class="back-btn" data-target-section="inicio">Volver al Menú</button>
+        <div class="card">
+          <h2>Juego de FNF</h2>
+          <p>Sumérgete en el ritmo con nuestro juego de Friday Night Funkin'. ¡Demuestra tus habilidades!</p>
+        </div>
+        <div class="juego-container">
+          <iframe src="juego/index.html" title="Juego de Friday Night Funkin'" frameborder="0" loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <section id="sensibilidad" class="content-section">
+        <button class="back-btn" data-target-section="inicio">Volver al Menú</button>
+        <div class="card">
+          <h2>Sensibilidad de Free Fire</h2>
+          <p>Optimiza tu juego con nuestras configuraciones de sensibilidad para Free Fire.</p>
+        </div>
+        <div class="juego-container">
+          <iframe src="juego/sensibilidad/index.html" title="Configuraciones de sensibilidad para Free Fire" frameborder="0" loading="lazy"></iframe>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Inicializar partículas
+    particlesJS('particles', {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#00f0ff' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#00f0ff', opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2, direction: 'none', random: false, straight: false, out_mode: 'out' }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+        modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
+      },
+      retina_detect: true
+    });
+
+    // Navegación
+    const links = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.content-section');
+    const nav = document.querySelector('nav');
+    const navToggle = document.querySelector('.nav-toggle');
+    const main = document.querySelector('main');
+    const backButtons = document.querySelectorAll('.back-btn');
+
+    function showSection(id) {
+      sections.forEach(section => {
+        section.classList.toggle('active', section.id === id);
+      });
+
+      links.forEach(link => {
+        link.classList.toggle('active', link.dataset.section === id);
+      });
+
+      if (window.innerWidth <= 900) {
+        nav.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        main.classList.add('full-width');
+      }
+    }
+
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        showSection(link.dataset.section);
+      });
+    });
+
+    backButtons.forEach(btn => {
+      btn.addEventListener('click', () => showSection(btn.dataset.targetSection));
+    });
+
+    navToggle.addEventListener('click', () => {
+      const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+      nav.classList.toggle('active');
+      navToggle.setAttribute('aria-expanded', !isExpanded);
+      main.classList.toggle('full-width');
+    });
+
+    // Mostrar inicio al cargar
+    showSection('inicio');
+
+    // Ajustar margen en resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900) {
+        nav.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        main.classList.remove('full-width');
+      }
+    });
+  </script>
+</body>
+</html>
